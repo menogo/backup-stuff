@@ -11,7 +11,6 @@ test/unit/coverage
 test/e2e/reports
 *.log*
 *.log
-*.zip
 
 
 # Created by https://www.gitignore.io/api/svn,node,linux,macos,windows,phpstorm,webstorm,sublimetext,visualstudiocode
