@@ -1,0 +1,12 @@
+{
+  "sites": [
+    {
+      "name": "google",
+      "id": 1
+    },
+    {
+      "name": "github",
+      "id": 2
+    }
+  ]
+}

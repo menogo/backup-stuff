@@ -1,0 +1,48 @@
+<html>
+  <head></head>
+  <body>
+    <div id="app">
+      <p>{{ message }}</p>
+    </div>
+  </body>
+  <script src="vue.js"></script>
+
+  <script>
+    var vm = new Vue({
+
+      // model just plain javascript object
+      data: {
+        message: 'Lorem ipsum dolor sit amet.'
+      },
+
+      beforeCreate: function() {
+        console.log('beforeCreate')
+        console.log(this)
+      },
+      created: function() {
+        console.log('created')
+        console.log(this)
+      },
+      beforeMount: function() {
+        alert('beforeMount')
+      },
+      mounted: function() {
+        alert('mounted')
+      },
+
+      // mounted: () => { console.log(this) }
+
+      beforeDestroy: function() {
+        alert('beforeDestroy')
+        console.log(this)
+      },
+      destroyed: function() {
+        alert('destroyed')
+        console.log(this)
+      }
+    })
+
+    vm.$mount(document.getElementById('app'));
+    // vm.$destroy()
+  </script>
+</html>

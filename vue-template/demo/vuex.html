@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+</head>
+<body>
+  <div id="app">
+    {{ count }}
+
+    <button class="btn" @click="increment">increment</button>
+    <button class="btn" @click="decrement">decrement</button>
+  </div>
+
+  <script src="vue.js"></script>
+  <script src="vuex.js"></script>
+  <script>
+    const store = new Vuex.Store({
+      state: {
+        count: 0 // 有点像全局变量一样，App内的任何组件都能够访问
+      },
+      mutations: {
+        increment(state) {
+          state.count++
+        },
+        decrement(state) {
+          state.count--
+        }
+      }
+    })
+
+    const app = new Vue({
+      el: '#app',
+      computed: { // 在Vue组件中获得Vuex状态
+        count() {
+          return store.state.count
+        }
+      },
+      methods: {
+        increment() {
+          store.commit('increment')
+        },
+        decrement() {
+          store.commit('decrement')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

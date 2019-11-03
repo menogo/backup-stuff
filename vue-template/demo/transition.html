@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+</head>
+<body>
+
+  <div id="app">
+    <router-link to="/foo">Go Foo</router-link><br>
+    <router-link to="/bar">Go Bar</router-link><br>
+    <hr>
+    <input type="password" placeholder="请输入密码">
+    <transition>
+      <router-view></router-view>
+    </transition>
+  </div>
+
+  <script src="vue.js"></script>
+  <script src="vue-router.js"></script>
+  <script>
+
+    // 定义'路由组件'
+    const Foo = {
+      template: `
+        <transition name="slide-right">
+          <div class="foo">Foo...</div>
+        </transition>
+      `
+    }
+    const Bar = {
+      template: `
+        <transition name="fade">
+          <div class="bar">Bar...</div>
+        </transition>
+      `
+    }
+    const notFound = { template: '<div>404...</div>' }
+
+    // 定义路由
+    // 每一个路由都应该对应一个'路由组件'
+    const routes = [
+      { path: '/foo', component: Foo },
+      { path: '/bar', component: Bar },
+      { path: '/404', component: notFound },
+      { path: '*', redirect: '/404' }
+    ]
+
+    // 创建路由实例
+    const router = new VueRouter({
+      // routes: routes
+      routes
+    })
+
+    // 挂在Vue实例到DOM，并且注入路由
+    const vm = new Vue({
+      router
+    }).$mount('#app')
+
+  </script>
+</body>
+</html>

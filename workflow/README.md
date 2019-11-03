@@ -1,0 +1,1 @@
+/*override packages default bower.json "main" property*/

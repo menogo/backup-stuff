@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="app">
+    <router-link to="/foo">Go Foo</router-link>
+    <router-link to="/bar">Go Bar</router-link>
+    <router-link :to="{ name: 'user', params: {username: 'alex'} }">Visit user Alex</router-link>
+    <hr>
+    <router-view name="default" ></router-view>
+    <router-view name="a"></router-view>
+    <router-view name="b"></router-view>
+  </div>
+
+  <script src="vue.js"></script>
+  <script src="vue-router.js"></script>
+  <script>
+
+    // 定义'路由组件'
+    const Foo = {
+      template: '<div>foo</div>'
+    }
+
+    const Bar = {
+      template: '<div>bar</div>'
+    }
+
+    // Dynamic segment
+    // 所有的用户都使用这个View Component
+    const User = {
+      template: `
+        <div>
+          <h2>User: {{ this.$route.params.username }}</h2>
+          <router-view></router-view>
+        </div>
+        `,
+      watch: {
+        '$route' (to, from) {
+          console.log(to)
+          console.log(from)
+          console.log(this.$router)
+        }
+      }
+    }
+
+    const UserProfile = { template: '<div>UserProfile</div>' }
+    const Post = { template: '<div>Post</div>' }
+    // const Bar = { template: '<div>Bar</div>'}
+    const Baz = { template: '<div>Baz</div>'}
+    const notFound = { template: '<div>404...</div>' }
+
+    // 定义路由
+    // 每一个路由都应该对应一个'路由组件'
+    const routes = [
+      { path: '/foo', component: Foo },
+      { path: '/bar', component: Bar },
+
+      // dynamic segments start with a colon
+      // 在 route component 里可以访问到 $route object，下面的例子：
+      // '/:username' => this.$route.params.username
+      // '/:post_id'  => this.$route.params.post_id
+      // { path: '/user/:username/post/:post_id', component: User }
+
+      // 内嵌路由
+      { path: '/user/:username', name: 'user', component: User,
+        children: [
+          {
+            path: '', // match: /user/:username
+            component: UserProfile
+          },
+
+          {
+            path: 'profile', // match: /user/:username/profile ( 不用'/' )
+            component: UserProfile
+          },
+
+          {
+            path: 'post', // match: /user/:username/post ( 不用'/' )
+            component: Post,
+            meta: { requiresAuth: true }
+          }
+        ]
+      },
+
+      // 多个同级router-view
+      {
+        path: '/',
+        name: 'root',
+        components: {
+          default: Foo,
+          a: Bar,
+          b: Baz
+        }
+      },
+
+      // 重定向, 当访问/a，URL会替换为/b
+      {
+        path: '/a', component: Foo, redirect: '/'                 // path
+        // path: '/a', component: Foo, redirect: { name: 'root' } // name
+        // path: '/a', component: Foo, redirect: to => {}         // function
+      },
+
+      // 别名 alias，URL显示还是/aa，但是路由匹配的是/foo，跟直接访问/foo是一样的
+      { path: '/aa', component: Foo, alias: '/foo' },
+      { path: '/404', component: notFound },
+      { path: '*', redirect: '/404' }
+    ]
+
+    // 创建路由实例
+    const router = new VueRouter({
+      // routes: routes
+      routes
+    })
+
+    // Navigation Guards
+    //
+    // Global Guards
+    // 需要 `进入某个路由之前，离开当前路由之前` 来实现的逻辑写在这里
+    router.beforeEach((to, from, next) => {
+      // alert('start')
+      // console.log(to)
+      // console.log(from)
+      // console.log(next)
+      if ( to.matched.some(function(record) { return record.meta.requiresAuth }) ) {
+        alert('ddd')
+        next()
+      } else {
+        next()
+      }
+
+      // if (to.matched.some(record => record.meta.requiresAuth)) {
+      //   let isLogined = false
+      //   if (!isLogined) {
+      //     alert('go login page')
+      //     next({
+      //       path: '/',
+      //       query: { redirect: to.fullPath }
+      //     })
+      //   } else {
+      //     next()
+      //   }
+      // } else {
+      //   next()
+      // }
+
+    })
+
+    router.afterEach(route => {
+
+    })
+
+    // Per-Route Guard
+    routes: [
+      {
+        path: '/foo',
+        component: Foo,
+        beforeEnter: (to, from, next) => {
+          // ...
+        }
+      }
+    ]
+
+    // In-Component Guards
+    const Foo1 = {
+      template: `...`,
+      beforeRouteEnter (to, from, next) {
+        // 在渲染该组件的对应路由被 confirm 前调用
+        // 不！能！获取组件实例 `this`
+        // 因为当钩子执行前，组件实例还没被创建
+
+        // 可以通过传一个回调给 next来访问组件实例
+        next(vm => {
+          // 通过 `vm` 访问组件实例
+        })
+
+      },
+      beforeRouteLeave (to, from, next) {
+        // 导航离开该组件的对应路由时调用
+        // 可以访问组件实例 `this`
+        // 这个 leave 钩子通常用来禁止用户在还未保存修改前突然离开
+        // 可以通过 next(false) 来取消导航。
+      }
+    }
+
+    // router.redirect({
+    //   '*': '/'
+    // })
+
+    // 挂在Vue实例到DOM，并且注入路由
+    const vm = new Vue({
+      router
+    }).$mount('#app')
+
+  </script>
+</body>
+</html>

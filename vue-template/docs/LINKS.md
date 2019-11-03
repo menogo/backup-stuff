@@ -1,0 +1,8 @@
+[jsonplaceholder](https://jsonplaceholder.typicode.com/)
+[vue guide v2 zh-ch](http://cn.vuejs.org/v2/guide/)
+[vue guide v2 en](https://vuejs.org/v2/guide/)
+[vue-router zh-cn](http://router.vuejs.org/zh-cn/)
+[vue-router en](http://router.vuejs.org/en/)
+[vuex zh-cn](https://vuex.vuejs.org/zh-cn/)
+[vuex en](https://vuex.vuejs.org/en/)
+[webpack cn](https://webpack.toobug.net/zh-cn/)
